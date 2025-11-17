@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subways of Budapest</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <section id="menu-screen" class="active">
+        <h1>Subways of Budapest</h1>
+        <div class="menu-box">
+            <label for="playerName">Enter your name:</label>
+            <input type="text" id="playerName" name="playerName" placeholder="Your Name">
+            <button id="startButton">Start Game</button>
+            <button id="rulesButton">Game Description</button>
+            <button id="scoresButton">View Scores</button>
+        </div>
+
+        <div id="rules" class="hidden">
+            <h2>Game Rules</h2>
+            <p>
+                Build metro lines, connect stations, and earn points! <br>
+                Follow the map rules and collect as many points as possible.
+            </p>
+            <button id="closeRules">Close</button>
+        </div>
+
+        <div id="scoreboard" class="hidden">
+            <h2>Previous Scores</h2>
+            <ul id="scoreList"></ul>
+            <button id="closeScores">Close</button>
+        </div>
+    </section>
+
+    <section id="game-screen" class="hidden">
+        <header>
+            <div id="playerInfo">
+                Player: <span id="displayName"></span>
+            </div>
+            <div id="timer">time: 00:00</div>
+            <div id="currentLine">
+                Line: <span id="lineName"></span>
+            </div>
+        </header>
+
+        <main>
+            <div id="board-container">
+                <table id="board"></table>
+            </div>
+
+            <aside id="controls">
+                <div id="card-area">
+                    <h3>Current Card</h3>
+                    <div id="cardDisplay">-</div>
+                    <button id="drawCardButton">Draw Next Card</button>
+                </div>
+
+                <div id="score-area">
+                    <h3>Round Score</h3>
+                    <p id="roundScore">0</p>
+                </div>
+            </aside>
+        </main>
+
+        <footer>
+            <button id="backToMenu">Back to Menu</button>
+        </footer>
+    </section>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
