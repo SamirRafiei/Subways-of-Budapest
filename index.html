@@ -5,17 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subways of Budapest</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .hidden {
-            display: none;
-        }
-        .active {
-            display: block;
-        }
-    </style>
 </head>
 <body>
-    <section id="menu-screen" class="active">
+    <section id="menu-screen" class="screen active">
         <h1>Subways of Budapest</h1>
         <div class="menu-box">
             <label for="playerName">Enter your name:</label>
@@ -42,8 +34,8 @@
         </div>
     </section>
 
-    <section id="game-screen" class="hidden">
-        <header>
+    <section id="game-screen" class="screen hidden">
+        <header class="game-header">
             <div id="playerInfo">
                 Player: <span id="displayName"></span>
             </div>
@@ -53,7 +45,7 @@
             </div>
         </header>
 
-        <main>
+        <main class="game-main">
             <div id="board-container">
                 <table id="board"></table>
             </div>
@@ -65,6 +57,8 @@
                     <button id="drawCardButton">Draw Next Card</button>
                 </div>
 
+                <div id="messageBox"></div>
+
                 <div id="score-area">
                     <h3>Round Score</h3>
                     <p id="roundScore">0</p>
@@ -72,7 +66,7 @@
             </aside>
         </main>
 
-        <footer>
+        <footer class="game-footer">
             <button id="backToMenu">Back to Menu</button>
         </footer>
     </section>

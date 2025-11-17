@@ -342,3 +342,85 @@ progress{width:120px;height:14px}
   background:#fff;
 }
 
+#cardDisplay {
+  font-size: 2.4rem;
+  font-weight: 800;
+  border-radius: 12px;
+  width: 140px; height: 140px;
+  display: flex; align-items: center;justify-content: center;
+  margin: 10px auto;
+  transition:.2s ease;
+  border: 2px solid var(--border);
+  background: #fafafa;
+}
+
+#cardDisplay .card-letter{
+  font-size:2.6rem;
+  line-height:1;
+}
+
+#cardDisplay .card-meta{
+  margin-top:6px;
+  font-size:0.75rem;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  color:var(--muted);
+}
+
+#cardDisplay.card-side{
+  border-color:#3b82f6;
+  background:#eff6ff;
+}
+
+#cardDisplay.card-center{
+  border-color:#22c55e;
+  background:#ecfdf3;
+}
+
+#cardDisplay.card-switch{
+  border-color:#f97316;
+  background:#fff7ed;
+}
+
+#messageBox {
+  margin-top: 10px;
+  min-height: 20px;
+  font-weight: 600;
+  color: #b00020;
+}
+
+#board td {
+  position: relative;
+}
+
+.segment {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 4px;
+  transform-origin: center center;
+}
+
+.segment-h {
+  width: 90%;
+  height: 6px;
+  transform: translate(-50%, -50%);
+}
+
+.segment-v {
+  width: 6px;
+  height: 90%;
+  transform: translate(-50%, -50%);
+}
+
+.segment-diag-main {
+  width: 90%;
+  height: 6px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.segment-diag-anti {
+  width: 90%;
+  height: 6px;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
