@@ -42,19 +42,26 @@
             <div id="timer">time: 00:00</div>
             <div id="currentLine">
                 Line: <span id="lineName"></span>
+             </div>
+            <div id="roundInfo">
+                Round: <span id="roundText">1 / 4</span>
             </div>
         </header>
 
+
         <main class="game-main">
-            <div id="board-container">
+           <div id="board-container">
+            <div id="boardOverlay"></div>
                 <table id="board"></table>
             </div>
+
 
             <aside id="controls">
                 <div id="card-area">
                     <h3>Current Card</h3>
                     <div id="cardDisplay">-</div>
                     <button id="drawCardButton">Draw Next Card</button>
+                    <button id="nextRoundButton" disabled>Next Round</button>
                 </div>
 
                 <div id="messageBox"></div>
