@@ -9,6 +9,15 @@ const backToMenu = document.querySelector('#backToMenu');
 const board = document.querySelector('#board');
 const lineName = document.querySelector('#lineName');
 const timerElement = document.querySelector('#timer');
+const nameError = document.querySelector("#nameError");
+
+const rulesButton = document.querySelector("#rulesButton");
+const rulesPanel = document.querySelector("#rules");
+const colseRulesBtn = document.querySelector("#closeRules");
+
+const scoresButton = document.querySelector("#scoresButton");
+const scoreboard = document.querySelector("#scoreboard");
+const closeScores = document.querySelector("#closeScores")
 
 let stations = [];
 let lines = [];
@@ -112,13 +121,39 @@ function generateBoard() {
     }
 }
 
-
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener("click", () => {
     const name = playerInput.value.trim();
-    if (name === '') return alert('Please enter your name!');
+
+    if (name === "") {
+        nameError.textContent = "please enter your name before staring the game";
+        nameError.classList.remove("hidden");
+        playerInput.focus();
+        return;
+    }
+
+    nameError.textContent = "";
+    nameError.classList.add("hidden");
     showGameScreen(name);
 });
 
+rulesButton.addEventListener("click", () => {
+    rulesPanel.classList.remove("hidden");
+    scorebard.classList.add("hidden");
+});
+
+colseRulesBtn.addEventListener("click", () => {
+    rulesPanel.classList.add("hidden");
+});
+
+scoresButton.addEventListener("click", () => {
+    scoreboard.classList.remove("hidden");
+    rulesPanel.classList.add("hidden");
+});
+
+closeScoreBtn.addEventListener("click", () => {
+    scoreboard.classList.remove("hidden");
+    rulesPanel.classList.add("hidden");
+});
 backToMenu.addEventListener('click', backToMenuScreen);
 
 

@@ -332,3 +332,13 @@ progress{width:120px;height:14px}
     height:calc(min(92vw, var(--board-max)));
   }
 }
+
+#rules,
+#scoreboard{
+  margin-top:16px;
+  padding:16px 18px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+}
+
