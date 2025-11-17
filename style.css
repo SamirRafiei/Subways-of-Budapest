@@ -30,7 +30,6 @@ body{
   padding:32px 16px;
 }
 
-/* screens */
 
 .screen{
   display:none;
@@ -50,7 +49,6 @@ h1{font-size:2rem;color:var(--brand);margin-bottom:6px}
 h2{font-size:1.4rem}
 h3{font-size:1rem}
 
-/* helpers */
 
 .visually-hidden{
   position:absolute!important;
@@ -68,7 +66,6 @@ h3{font-size:1rem}
 .help-text{color:var(--muted);font-size:.9rem}
 .error-text{color:#b00020;font-weight:bold;margin-top:4px}
 
-/* buttons */
 
 button{
   appearance:none;
@@ -84,7 +81,6 @@ button{
 button:hover{background:var(--brand-dark)}
 button:disabled{opacity:.6;cursor:not-allowed}
 
-/* menu */
 
 .menu-box{
   display:flex;
@@ -108,7 +104,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   box-shadow:0 0 0 3px rgba(0,86,165,.15);
 }
 
-/* dialog generic (if used later) */
 
 .dialog{
   position:fixed;
@@ -170,7 +165,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   z-index:-1;
 }
 
-/* scores list (for later high scores) */
 
 .score-list{
   list-style:none;
@@ -194,7 +188,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .score-item .score-time{color:var(--muted)}
 .score-item time{color:var(--muted);font-size:.85rem}
 
-/* game header */
 
 .game-header{
   display:flex;
@@ -212,7 +205,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   font-weight:600;
 }
 
-/* main layout */
 
 .game-main{
   display:flex;
@@ -220,7 +212,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   align-items:flex-start;
 }
 
-/* board and overlay */
 
 #board-container{
   position:relative;
@@ -260,7 +251,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   position:relative;
 }
 
-/* stations */
 
 .station-label{
   position:relative;
@@ -284,7 +274,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   border:3px solid #111;
 }
 
-/* overlay lines */
 
 .segment-line{
   position:absolute;
@@ -294,7 +283,6 @@ button:disabled{opacity:.6;cursor:not-allowed}
   z-index:1;
 }
 
-/* sidebar controls */
 
 #controls{
   width:min(260px, 40vw);
@@ -360,7 +348,6 @@ progress{width:120px;height:14px}
   margin-top:6px;
 }
 
-/* messages */
 
 #messageBox{
   margin-top:10px;
@@ -369,7 +356,6 @@ progress{width:120px;height:14px}
   color:#b00020;
 }
 
-/* footer */
 
 .game-footer{
   display:flex;
@@ -379,7 +365,6 @@ progress{width:120px;height:14px}
   border-top:1px solid var(--border);
 }
 
-/* results modal skeleton (if used later) */
 
 #results-screen{
   position:fixed;
@@ -422,7 +407,6 @@ progress{width:120px;height:14px}
   z-index:-1;
 }
 
-/* rules & scores panels in menu */
 
 #rules,
 #scoreboard{
@@ -433,7 +417,6 @@ progress{width:120px;height:14px}
   background:#fff;
 }
 
-/* responsive */
 
 @media (max-width: 940px){
   .game-main{flex-direction:column}
@@ -444,3 +427,41 @@ progress{width:120px;height:14px}
     height:calc(min(92vw, var(--board-max)));
   }
 }
+
+#board-container{
+  position:relative;
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:6px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+}
+
+#boardOverlay{
+  position:absolute;
+  inset:6px;
+  width:calc(var(--cell-size) * var(--grid-size));
+  height:calc(var(--cell-size) * var(--grid-size));
+  pointer-events:none;
+}
+
+.segment-line{
+  position:absolute;
+  height:6px;
+  border-radius:4px;
+  transform-origin:0 50%;
+}
+
+#danube{
+  position:absolute;
+  top:0;
+  bottom:0;
+  background:rgba(37,99,235,.35);  
+  border-left:3px solid #1d4ed8;
+  border-right:3px solid #1d4ed8;
+  pointer-events:none;
+}
+

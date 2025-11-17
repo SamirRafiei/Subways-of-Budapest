@@ -51,9 +51,10 @@
 
         <main class="game-main">
            <div id="board-container">
-            <div id="boardOverlay"></div>
+                <div id="boardOverlay"></div>
                 <table id="board"></table>
             </div>
+
 
 
             <aside id="controls">
@@ -67,8 +68,13 @@
                 <div id="messageBox"></div>
 
                 <div id="score-area">
-                    <h3>Round Score</h3>
-                    <p id="roundScore">0</p>
+                    <h3>Round scoring</h3>
+                    <p>PK (districts): <span id="pkValue">0</span></p>
+                    <p>PM (max in district): <span id="pmValue">0</span></p>
+                    <p>PD (Danube crossings): <span id="pdValue">0</span></p>
+                    <p>FP = PK x PM + PD: <span id="fpValue">0</span></p>
+                    <hr>
+                    <p>Total FP: <span id="totalFpValue">0</span></p>
                 </div>
             </aside>
         </main>
