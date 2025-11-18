@@ -8,6 +8,7 @@ const backToMenu = document.querySelector('#backToMenu');
 
 const board = document.querySelector('#board');
 const boardOverlay = document.querySelector('#boardOverlay');
+const boardContainer = document.querySelector('#board-container');
 const lineName = document.querySelector('#lineName');
 const timerElement = document.querySelector('#timer');
 const nameError = document.querySelector('#nameError');
@@ -33,6 +34,18 @@ const pdValue = document.querySelector('#pdValue');
 const fpValue = document.querySelector('#fpValue');
 const totalFpValue = document.querySelector('#totalFpValue');
 
+const railProgress = document.querySelector('#railProgress');
+const ppValue = document.querySelector('#ppValue');
+
+const p2Value = document.querySelector('#p2Value');
+const p3Value = document.querySelector('#p3Value');
+const p4Value = document.querySelector('#p4Value');
+
+const sumFpValue = document.querySelector('#sumFpValue');
+const ppValueFinal = document.querySelector('#ppValueFinal');
+const junctionPtsValue = document.querySelector('#junctionPtsValue');
+const finalScoreValue = document.querySelector('#finalScoreValue');
+
 const stationCells = new Map();
 
 let stations = [];
@@ -57,6 +70,21 @@ let cardsDrawnThisRound = 0;
 
 const lineScores = new Map();
 let totalFp = 0;
+
+const railSteps = [0, 1, 2, 4, 6, 8, 11, 14, 17, 21, 25];
+let trainContactCount = 0;
+let currentPP = 0;
+
+const stationVisitMap = new Map();   // stationId -> Set(lineId)
+const lineTrainStations = new Map(); // lineId -> Set(stationId)
+
+let junctionP2 = 0;
+let junctionP3 = 0;
+let junctionP4 = 0;
+let junctionPoints = 0;
+let finalScore = 0;
+
+const JOKER_STATION_ID = 30;
 
 async function loadData() {
     try {
@@ -86,6 +114,16 @@ function resetGameState() {
     lineScores.clear();
     totalFp = 0;
 
+    stationVisitMap.clear();
+    lineTrainStations.clear();
+    trainContactCount = 0;
+    currentPP = 0;
+    junctionP2 = 0;
+    junctionP3 = 0;
+    junctionP4 = 0;
+    junctionPoints = 0;
+    finalScore = 0;
+
     if (boardOverlay) boardOverlay.innerHTML = '';
     if (board) board.innerHTML = '';
     stationCells.clear();
@@ -95,7 +133,17 @@ function resetGameState() {
     if (pdValue) pdValue.textContent = '0';
     if (fpValue) fpValue.textContent = '0';
     if (totalFpValue) totalFpValue.textContent = '0';
+    if (sumFpValue) sumFpValue.textContent = '0';
     if (roundText) roundText.textContent = '1 / 4';
+
+    if (railProgress) railProgress.value = 0;
+    if (ppValue) ppValue.textContent = '0';
+    if (ppValueFinal) ppValueFinal.textContent = '0';
+    if (p2Value) p2Value.textContent = '0';
+    if (p3Value) p3Value.textContent = '0';
+    if (p4Value) p4Value.textContent = '0';
+    if (junctionPtsValue) junctionPtsValue.textContent = '0';
+    if (finalScoreValue) finalScoreValue.textContent = '0';
 
     if (cardDisplay) {
         cardDisplay.className = '';
@@ -176,7 +224,6 @@ function createDeck() {
     return cards;
 }
 
-
 function resetDeckForRound() {
     deck = createDeck();
     currentCard = null;
@@ -209,7 +256,6 @@ function updateCardDisplay(card) {
         <div class="card-meta">${meta}</div>
     `;
 }
-
 
 function showMessage(text) {
     const msg = document.querySelector('#messageBox');
@@ -295,8 +341,6 @@ function drawSegment(fromStation, toStation) {
     boardOverlay.appendChild(line);
 }
 
-const JOKER_STATION_ID = 30;
-
 function hasSegmentBetween(aId, bId) {
     return segments.some(seg =>
         (seg.from === aId && seg.to === bId) ||
@@ -351,6 +395,28 @@ function wouldCrossExisting(fromStation, toStation) {
     });
 }
 
+function registerTrainContact(lineId, stationId) {
+    const st = getStationById(stationId);
+    if (!st || !st.train) return;
+
+    let set = lineTrainStations.get(lineId);
+    if (!set) {
+        set = new Set();
+        lineTrainStations.set(lineId, set);
+    }
+    if (set.has(stationId)) return;
+
+    set.add(stationId);
+    trainContactCount++;
+    updateRailSlider();
+}
+
+function updateRailSlider() {
+    const index = Math.min(trainContactCount, railSteps.length - 1);
+    currentPP = railSteps[index];
+    if (railProgress) railProgress.value = index;
+    if (ppValue) ppValue.textContent = currentPP;
+}
 
 function handleStationClick(station) {
     if (!currentCard) {
@@ -400,12 +466,14 @@ function handleStationClick(station) {
         endpoints = [currentStartStation.id, station.id];
         refreshEndpointStyles();
 
+        registerTrainContact(currentLine.id, currentStartStation.id);
+        registerTrainContact(currentLine.id, station.id);
+
         currentCard = null;
         updateCardDisplay(null);
         showMessage('first segment drawn');
         return;
     }
-
 
     let fromEndpointId = null;
     for (let i = endpoints.length - 1; i >= 0; i--) {
@@ -442,11 +510,13 @@ function handleStationClick(station) {
     endpoints.push(station.id);
     refreshEndpointStyles();
 
+    registerTrainContact(currentLine.id, fromStation.id);
+    registerTrainContact(currentLine.id, station.id);
+
     currentCard = null;
     updateCardDisplay(null);
     showMessage('segment drawn');
 }
-
 
 function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -508,9 +578,40 @@ function computeRoundScore() {
 
     lineScores.set(currentLine.id, { PK, PM, PD, FP });
 
+    visitedStations.forEach(id => {
+        let set = stationVisitMap.get(id);
+        if (!set) {
+            set = new Set();
+            stationVisitMap.set(id, set);
+        }
+        set.add(currentLine.id);
+    });
+
     totalFp = 0;
     lineScores.forEach(v => totalFp += v.FP);
     if (totalFpValue) totalFpValue.textContent = totalFp;
+    if (sumFpValue) sumFpValue.textContent = totalFp;
+}
+
+function computeGlobalJunctions() {
+    junctionP2 = 0;
+    junctionP3 = 0;
+    junctionP4 = 0;
+    junctionPoints = 0;
+
+    stationVisitMap.forEach(set => {
+        const count = set.size;
+        if (count === 2) junctionP2++;
+        else if (count === 3) junctionP3++;
+        else if (count >= 4) junctionP4++;
+    });
+
+    if (p2Value) p2Value.textContent = junctionP2;
+    if (p3Value) p3Value.textContent = junctionP3;
+    if (p4Value) p4Value.textContent = junctionP4;
+
+    junctionPoints = 2 * junctionP2 + 5 * junctionP3 + 9 * junctionP4;
+    if (junctionPtsValue) junctionPtsValue.textContent = junctionPoints;
 }
 
 function saveFinalScore() {
@@ -520,7 +621,7 @@ function saveFinalScore() {
 
     const record = {
         name: currentPlayerName || 'Player',
-        score: totalFp,
+        score: finalScore,
         seconds: elapsedSeconds,
         timeText,
         date: new Date().toISOString()
@@ -551,6 +652,23 @@ function renderScoreboard() {
     });
 }
 
+function finishGame() {
+    computeGlobalJunctions();
+    finalScore = totalFp + currentPP + junctionPoints;
+
+    if (sumFpValue) sumFpValue.textContent = totalFp;
+    if (ppValueFinal) ppValueFinal.textContent = currentPP;
+    if (junctionPtsValue) junctionPtsValue.textContent = junctionPoints;
+    if (finalScoreValue) finalScoreValue.textContent = finalScore;
+
+    saveFinalScore();
+    renderScoreboard();
+    showMessage(`Game over. Final score: ${finalScore}`);
+    drawCardButton.disabled = true;
+    nextRoundButton.disabled = true;
+    backToMenuScreen();
+}
+
 function startNewRound() {
     if (!lines.length) return;
 
@@ -559,12 +677,7 @@ function startNewRound() {
     }
 
     if (currentRoundIndex >= lineOrder.length) {
-        saveFinalScore();
-        renderScoreboard();
-        showMessage(`Game over. Total FP: ${totalFp}`);
-        drawCardButton.disabled = true;
-        nextRoundButton.disabled = true;
-        backToMenuScreen();
+        finishGame();
         return;
     }
 
@@ -588,9 +701,9 @@ function startNewRound() {
 }
 
 function renderDanube() {
-    if (!boardOverlay || !stations.length) return;
+    if (!boardContainer || !stations.length) return;
 
-    const old = document.querySelector('#danube');
+    const old = boardContainer.querySelector('#danube');
     if (old) old.remove();
 
     const budaXs = stations.filter(s => s.side === 'Buda').map(s => s.x);
@@ -601,26 +714,25 @@ function renderDanube() {
     const minPestX = Math.min(...pestXs);
 
     const gridSize = 10;
-    const overlayWidth = boardOverlay.offsetWidth || board.offsetWidth;
-    if (!overlayWidth) return;
+    const boardWidth = board.offsetWidth;
+    if (!boardWidth) return;
 
-    const cellWidth = overlayWidth / gridSize;
+    const cellWidth = boardWidth / gridSize;
 
     const leftCol = maxBudaX + 0.5;
     const rightCol = minPestX + 0.5;
     const centerCol = (leftCol + rightCol) / 2;
 
-    const riverWidth = cellWidth * 1.2;   // nice thick band
-    const leftPx = centerCol * cellWidth - riverWidth / 2;
+    const riverWidth = cellWidth * 1.2;
+    const leftPx = board.offsetLeft + centerCol * cellWidth - riverWidth / 2;
 
     const river = document.createElement('div');
     river.id = 'danube';
     river.style.left = `${leftPx}px`;
     river.style.width = `${riverWidth}px`;
 
-    boardOverlay.appendChild(river);
+    boardContainer.appendChild(river);
 }
-
 
 function generateBoard() {
     board.innerHTML = '';
@@ -647,10 +759,7 @@ function generateBoard() {
                 }
 
                 stationCells.set(station.id, cell);
-
-                cell.addEventListener('click', () => {
-                    handleStationClick(station);
-                });
+                cell.addEventListener('click', () => handleStationClick(station));
             }
 
             row.appendChild(cell);
@@ -659,10 +768,8 @@ function generateBoard() {
         board.appendChild(row);
     }
 
-    renderDanube();
+    setTimeout(renderDanube, 0);
 }
-
-
 
 startBtn.addEventListener('click', () => {
     const name = playerInput.value.trim();
@@ -729,5 +836,6 @@ nextRoundButton.addEventListener('click', () => {
     currentRoundIndex++;
     startNewRound();
 });
+
 
 loadData();

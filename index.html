@@ -21,9 +21,21 @@
         <div id="rules" class="hidden">
             <h2>Game Rules</h2>
             <p>
-                Build metro lines, connect stations, and earn points! <br>
-                Follow the map rules and collect as many points as possible.
+                The goal is to build 4 metro lines (M1–M4) and collect as many points as possible.
             </p>
+            <ul>
+                <li>On the menu, enter your name and press <strong>Start Game</strong>.</li>
+                <li>On the game screen, each round belongs to one metro line.</li>
+                <li>Press <strong>Draw Next Card</strong> to reveal a station card.</li>
+                <li>After drawing a card, click a valid station on the board to draw one segment.</li>
+                <li>The first segment of a round must start from the highlighted starting station of the current line.</li>
+                <li>Later segments must start from an endpoint of the current line.</li>
+                <li>Segments must be straight (horizontal/vertical) or diagonal at 45°, and may not pass through other stations.</li>
+                <li>Stations must match the card letter, except Joker cards and the Joker station (Deák tér).</li>
+                <li>Segments cannot cross or be parallel between the same two stations, and a line cannot re-enter its own stations.</li>
+                <li>After 8 cards in a round, you must press <strong>Next Round</strong> to continue with the next metro line.</li>
+                <li>After all 4 rounds, scores are calculated and saved; they can be viewed from the menu.</li>
+            </ul>
             <button id="closeRules">Close</button>
         </div>
 
@@ -42,27 +54,26 @@
             <div id="timer">time: 00:00</div>
             <div id="currentLine">
                 Line: <span id="lineName"></span>
-             </div>
+            </div>
             <div id="roundInfo">
                 Round: <span id="roundText">1 / 4</span>
             </div>
         </header>
 
-
         <main class="game-main">
-           <div id="board-container">
+            <div id="board-container">
                 <div id="boardOverlay"></div>
                 <table id="board"></table>
             </div>
-
-
 
             <aside id="controls">
                 <div id="card-area">
                     <h3>Current Card</h3>
                     <div id="cardDisplay">-</div>
-                    <button id="drawCardButton">Draw Next Card</button>
-                    <button id="nextRoundButton" disabled>Next Round</button>
+                    <div class="card-actions">
+                        <button id="drawCardButton">Draw Next Card</button>
+                        <button id="nextRoundButton" disabled>Next Round</button>
+                    </div>
                 </div>
 
                 <div id="messageBox"></div>
@@ -74,7 +85,24 @@
                     <p>PD (Danube crossings): <span id="pdValue">0</span></p>
                     <p>FP = PK x PM + PD: <span id="fpValue">0</span></p>
                     <hr>
-                    <p>Total FP: <span id="totalFpValue">0</span></p>
+                    <p>Σ FP (all rounds): <span id="totalFpValue">0</span></p>
+
+                    <h3>Railway stations</h3>
+                    <div class="train-row">
+                        <progress id="railProgress" max="10" value="0"></progress>
+                        <span>PP: <span id="ppValue">0</span></span>
+                    </div>
+
+                    <h3>Junctions</h3>
+                    <p>2 lines: <span id="p2Value">0</span></p>
+                    <p>3 lines: <span id="p3Value">0</span></p>
+                    <p>4 lines: <span id="p4Value">0</span></p>
+
+                    <h3>Final</h3>
+                    <p>Σ FP: <span id="sumFpValue">0</span></p>
+                    <p>PP (rail): <span id="ppValueFinal">0</span></p>
+                    <p>Junction pts: <span id="junctionPtsValue">0</span></p>
+                    <p>Total: <span id="finalScoreValue">0</span></p>
                 </div>
             </aside>
         </main>
@@ -83,6 +111,7 @@
             <button id="backToMenu">Back to Menu</button>
         </footer>
     </section>
+
 
     <script src="script.js" defer></script>
 </body>
